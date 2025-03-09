@@ -8,56 +8,68 @@ COMFYUI_PATH="/runpod-volume/comfyui"
 START_SCRIPT="/runpod-volume/start.sh"
 RP_HANDLER_SCRIPT="/runpod-volume/rp_handler.py"
 
+echo "[INFO] Starting installation script."
+
 # Ensure the runpod-volume directory exists
-mkdir -p /runpod-volume
+if [ ! -d "/runpod-volume" ]; then
+    echo "[ERROR] /runpod-volume directory does not exist. Please ensure it is created before running this script."
+    exit 1
+fi
 
 # Check if Python virtual environment exists
 if [ ! -d "$VENV_PATH" ] || [ ! -f "$VENV_PATH/bin/activate" ]; then
-    echo "Setting up Python virtual environment..."
+    echo "[INFO] Virtual environment not found. Creating a new one."
     rm -rf "$VENV_PATH"  # Remove any broken venv
     python3 -m venv "$VENV_PATH"
     if [ $? -ne 0 ]; then
-        echo "Error: Failed to create virtual environment. Exiting."
+        echo "[ERROR] Failed to create virtual environment. Exiting."
         exit 1
     fi
+    echo "[INFO] Virtual environment created successfully."
 fi
 
 # Verify virtual environment activation script exists
 if [ ! -f "$VENV_PATH/bin/activate" ]; then
-    echo "Error: Virtual environment activation script still not found. Exiting."
+    echo "[ERROR] Virtual environment activation script still not found. Exiting."
     exit 1
 fi
 
 # Activate virtual environment
+echo "[INFO] Activating virtual environment."
 source "$VENV_PATH/bin/activate"
 
 # Check if ComfyUI is installed
 if [ ! -d "$COMFYUI_PATH" ]; then
-    echo "Installing ComfyUI dependencies..."
+    echo "[INFO] ComfyUI not found. Installing..."
     git clone https://github.com/comfyanonymous/ComfyUI.git "$COMFYUI_PATH"
     cd "$COMFYUI_PATH"
+    echo "[INFO] Upgrading pip."
     pip install --upgrade pip
+    echo "[INFO] Installing ComfyUI dependencies."
     pip install -r requirements.txt
+    echo "[INFO] ComfyUI installation completed."
 else
-    echo "ComfyUI already installed. Skipping installation."
+    echo "[INFO] ComfyUI already installed. Skipping installation."
 fi
 
 # Check and copy necessary scripts
 if [ -f "/scripts/start.sh" ]; then
-    echo "Copying start.sh to runpod volume..."
+    echo "[INFO] Copying start.sh to /runpod-volume."
     cp /scripts/start.sh "$START_SCRIPT"
     chmod +x "$START_SCRIPT"
 else
-    echo "Warning: start.sh not found in /scripts."
+    echo "[WARNING] start.sh not found in /scripts. Skipping copy."
 fi
 
 if [ -f "/scripts/rp_handler.py" ]; then
-    echo "Copying rp_handler.py to runpod volume..."
+    echo "[INFO] Copying rp_handler.py to /runpod-volume."
     cp /scripts/rp_handler.py "$RP_HANDLER_SCRIPT"
     chmod +x "$RP_HANDLER_SCRIPT"
 else
-    echo "Warning: rp_handler.py not found in /scripts."
+    echo "[WARNING] rp_handler.py not found in /scripts. Skipping copy."
 fi
+
+echo "[INFO] Installation script completed. Starting ComfyUI..."
 
 # Execute start script
 exec "$START_SCRIPT"
