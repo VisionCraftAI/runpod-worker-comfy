@@ -27,6 +27,16 @@ if [ ! -d "$VENV_PATH" ] || [ ! -f "$VENV_PATH/bin/activate" ]; then
         exit 1
     fi
     echo "[INFO] Virtual environment created successfully."
+    
+    # Activate the virtual environment
+    source "$VENV_PATH/bin/activate"
+    
+    # Export current packages to file
+    echo "[INFO] Exporting list of installed packages..."
+    pip list --format=freeze > /runpod-volume/installed_packages.txt
+    echo "[INFO] Package list exported to /runpod-volume/installed_packages.txt"
+    echo "[INFO] Installing installed_packages.txt"
+    pip install -r /runpod-volume/installed_packages.txt
 fi
 
 # Verify virtual environment activation script exists
@@ -39,9 +49,9 @@ fi
 echo "[INFO] Activating virtual environment."
 source "$VENV_PATH/bin/activate"
 
-# Install PyTorch with CUDA 12.1 support
-echo "[INFO] Installing PyTorch with CUDA 12.1 support..."
-python -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+# Install PyTorch with CUDA 11.8 support
+echo "[INFO] Installing PyTorch with CUDA 11.8 support..."
+python -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118
 echo "[INFO] PyTorch installation completed."
 
 # Check if requirements.txt exists in /runpod-volume, copy from root if not present
