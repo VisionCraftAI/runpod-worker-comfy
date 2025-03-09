@@ -8,10 +8,24 @@ COMFYUI_PATH="/runpod-volume/comfyui"
 START_SCRIPT="/runpod-volume/start.sh"
 RP_HANDLER_SCRIPT="/runpod-volume/rp_handler.py"
 
+# Ensure the runpod-volume directory exists
+mkdir -p /runpod-volume
+
 # Check if Python virtual environment exists
-if [ ! -d "$VENV_PATH" ]; then
+if [ ! -d "$VENV_PATH" ] || [ ! -f "$VENV_PATH/bin/activate" ]; then
     echo "Setting up Python virtual environment..."
+    rm -rf "$VENV_PATH"  # Remove any broken venv
     python3 -m venv "$VENV_PATH"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create virtual environment. Exiting."
+        exit 1
+    fi
+fi
+
+# Verify virtual environment activation script exists
+if [ ! -f "$VENV_PATH/bin/activate" ]; then
+    echo "Error: Virtual environment activation script still not found. Exiting."
+    exit 1
 fi
 
 # Activate virtual environment
@@ -40,6 +54,7 @@ fi
 if [ -f "/scripts/rp_handler.py" ]; then
     echo "Copying rp_handler.py to runpod volume..."
     cp /scripts/rp_handler.py "$RP_HANDLER_SCRIPT"
+    chmod +x "$RP_HANDLER_SCRIPT"
 else
     echo "Warning: rp_handler.py not found in /scripts."
 fi
