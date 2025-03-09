@@ -24,14 +24,14 @@ RUN apt-get update && apt-get install -y \
 # Clean up to reduce image size
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-
 # Copy install and start scripts from src directory
 COPY src/install_comfyui.sh /scripts/install_comfyui.sh
 COPY src/start.sh /scripts/start.sh
 COPY src/rp_handler.py /scripts/rp_handler.py
+COPY requirements.txt requirements.txt
 
 # Ensure scripts are executable
-RUN chmod +x /scripts/install_comfyui.sh /scripts/start.sh /scripts/rp_handler.py
+RUN chmod +x /scripts/install_comfyui.sh /scripts/start.sh /scripts/rp_handler.py requirements.txt
 
 # Set entrypoint to installation script
 ENTRYPOINT ["/scripts/install_comfyui.sh"]

@@ -38,6 +38,13 @@ fi
 echo "[INFO] Activating virtual environment."
 source "$VENV_PATH/bin/activate"
 
+# Check if custom requirements.txt exists and install if present
+if [ -f "/runpod-volume/requirements.txt" ]; then
+    echo "[INFO] Found custom requirements.txt. Installing packages..."
+    pip install -r /runpod-volume/requirements.txt
+    echo "[INFO] Custom requirements installation completed."
+fi
+
 # Check if ComfyUI is installed
 if [ ! -d "$COMFYUI_PATH" ]; then
     echo "[INFO] ComfyUI not found. Installing..."
@@ -53,18 +60,22 @@ else
 fi
 
 # Check and copy necessary scripts
-if [ -f "/scripts/start.sh" ]; then
+if [ -f "/scripts/start.sh" ] && [ ! -f "$START_SCRIPT" ]; then
     echo "[INFO] Copying start.sh to /runpod-volume."
     cp /scripts/start.sh "$START_SCRIPT"
     chmod +x "$START_SCRIPT"
+elif [ -f "$START_SCRIPT" ]; then
+    echo "[INFO] start.sh already exists in /runpod-volume. Skipping copy."
 else
     echo "[WARNING] start.sh not found in /scripts. Skipping copy."
 fi
 
-if [ -f "/scripts/rp_handler.py" ]; then
+if [ -f "/scripts/rp_handler.py" ] && [ ! -f "$RP_HANDLER_SCRIPT" ]; then
     echo "[INFO] Copying rp_handler.py to /runpod-volume."
     cp /scripts/rp_handler.py "$RP_HANDLER_SCRIPT"
     chmod +x "$RP_HANDLER_SCRIPT"
+elif [ -f "$RP_HANDLER_SCRIPT" ]; then
+    echo "[INFO] rp_handler.py already exists in /runpod-volume. Skipping copy."
 else
     echo "[WARNING] rp_handler.py not found in /scripts. Skipping copy."
 fi
