@@ -13,6 +13,7 @@ ENV CMAKE_BUILD_PARALLEL_LEVEL=8
 RUN apt-get update && apt-get install -y \
     python3.10 \
     python3-pip \
+    python3.10-venv \
     git \
     wget \
     libgl1 \
