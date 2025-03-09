@@ -1,3 +1,4 @@
+# Stage 1: Base image with common dependencies
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 as base
 
 # Prevents prompts from packages asking for user input during installation
@@ -9,20 +10,16 @@ ENV PYTHONUNBUFFERED=1
 # Speed up some cmake builds
 ENV CMAKE_BUILD_PARALLEL_LEVEL=8
 
-# Install Python, git, and other necessary tools
+# Install Python, git and other necessary tools
 RUN apt-get update && apt-get install -y \
     python3.10 \
     python3-pip \
     python3.10-venv \
-    python3.10-distutils \
     git \
     wget \
     libgl1 \
     && ln -sf /usr/bin/python3.10 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip
-
-# Ensure pip is available and upgrade it
-RUN python3 -m ensurepip && pip install --upgrade pip
 
 # Clean up to reduce image size
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
