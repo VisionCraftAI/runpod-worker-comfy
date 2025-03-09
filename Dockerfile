@@ -1,4 +1,3 @@
-# Stage 1: Base image with common dependencies
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 as base
 
 # Prevents prompts from packages asking for user input during installation
@@ -23,10 +22,10 @@ RUN apt-get update && apt-get install -y \
 # Clean up to reduce image size
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# Copy install and start scripts
-COPY install_comfyui.sh /scripts/install_comfyui.sh
-COPY start.sh /scripts/start.sh
-COPY rp_handler.py /scripts/rp_handler.py
+# Copy install and start scripts from src directory
+COPY src/install_comfyui.sh /scripts/install_comfyui.sh
+COPY src/start.sh /scripts/start.sh
+COPY src/rp_handler.py /scripts/rp_handler.py
 
 # Ensure scripts are executable
 RUN chmod +x /scripts/install_comfyui.sh /scripts/start.sh
