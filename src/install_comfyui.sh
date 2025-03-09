@@ -38,11 +38,21 @@ fi
 echo "[INFO] Activating virtual environment."
 source "$VENV_PATH/bin/activate"
 
-# Check if custom requirements.txt exists and install if present
+# Check if requirements.txt exists in /runpod-volume, copy from root if not present
+if [ ! -f "/runpod-volume/requirements.txt" ] && [ -f "/requirements.txt" ]; then
+    echo "[INFO] Copying requirements.txt from root to /runpod-volume."
+    cp /requirements.txt /runpod-volume/requirements.txt
+elif [ ! -f "/runpod-volume/requirements.txt" ]; then
+    echo "[WARNING] requirements.txt not found in root or /runpod-volume."
+else
+    echo "[INFO] requirements.txt already exists in /runpod-volume. Skipping copy."
+fi
+
+# Install from requirements.txt if present (separate command)
 if [ -f "/runpod-volume/requirements.txt" ]; then
-    echo "[INFO] Found custom requirements.txt. Installing packages..."
+    echo "[INFO] Installing packages from requirements.txt..."
     pip install -r /runpod-volume/requirements.txt
-    echo "[INFO] Custom requirements installation completed."
+    echo "[INFO] Requirements installation completed."
 fi
 
 # Check if ComfyUI is installed
