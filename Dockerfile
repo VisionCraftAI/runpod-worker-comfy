@@ -14,11 +14,16 @@ RUN apt-get update && apt-get install -y \
     python3.10 \
     python3-pip \
     python3.10-venv \
+    python3.10-distutils \
+    python3.10-ensurepip \
     git \
     wget \
     libgl1 \
     && ln -sf /usr/bin/python3.10 /usr/bin/python \
     && ln -sf /usr/bin/pip3 /usr/bin/pip
+
+# Ensure pip and virtualenv support is available
+RUN python3 -m ensurepip --default-pip && pip install --upgrade pip
 
 # Clean up to reduce image size
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
