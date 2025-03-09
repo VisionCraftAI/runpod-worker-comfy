@@ -7,6 +7,7 @@ VENV_PATH="/runpod-volume/venv"
 COMFYUI_PATH="/runpod-volume/comfyui"
 START_SCRIPT="/runpod-volume/start.sh"
 RP_HANDLER_SCRIPT="/runpod-volume/rp_handler.py"
+REQUIREMENTS_FILE="/runpod-volume/requirements.txt"
 
 echo "[INFO] Starting installation script."
 
@@ -38,20 +39,25 @@ fi
 echo "[INFO] Activating virtual environment."
 source "$VENV_PATH/bin/activate"
 
+# Install PyTorch with CUDA 12.1 support
+echo "[INFO] Installing PyTorch with CUDA 12.1 support..."
+python -m pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu121
+echo "[INFO] PyTorch installation completed."
+
 # Check if requirements.txt exists in /runpod-volume, copy from root if not present
-if [ ! -f "/runpod-volume/requirements.txt" ] && [ -f "/requirements.txt" ]; then
+if [ ! -f "$REQUIREMENTS_FILE" ] && [ -f "/requirements.txt" ]; then
     echo "[INFO] Copying requirements.txt from root to /runpod-volume."
-    cp /requirements.txt /runpod-volume/requirements.txt
-elif [ ! -f "/runpod-volume/requirements.txt" ]; then
+    cp /requirements.txt "$REQUIREMENTS_FILE"
+elif [ ! -f "$REQUIREMENTS_FILE" ]; then
     echo "[WARNING] requirements.txt not found in root or /runpod-volume."
 else
     echo "[INFO] requirements.txt already exists in /runpod-volume. Skipping copy."
 fi
 
 # Install from requirements.txt if present (separate command)
-if [ -f "/runpod-volume/requirements.txt" ]; then
+if [ -f "$REQUIREMENTS_FILE" ]; then
     echo "[INFO] Installing packages from requirements.txt..."
-    pip install -r /runpod-volume/requirements.txt
+    pip install -r "$REQUIREMENTS_FILE"
     echo "[INFO] Requirements installation completed."
 fi
 
