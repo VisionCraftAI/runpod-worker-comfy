@@ -31,6 +31,9 @@ COPY src/rp_handler.py /rp_handler.py
 COPY src/images_utils.py /images_utils.py
 COPY requirements.txt requirements.txt
 
+# Add validation schemas
+COPY schemas /schemas
+
 # Ensure scripts are executable
 RUN chmod +x /install_comfyui.sh /start.sh /rp_handler.py requirements.txt
 
