@@ -30,13 +30,13 @@ if [ ! -d "$VENV_PATH" ] || [ ! -f "$VENV_PATH/bin/activate" ]; then
     
     # Export current packages to file
     echo "[INFO] Exporting list of installed packages..."
-    pip list --format=freeze > /runpod-volume/installed_packages.txt
-    echo "[INFO] Package list exported to /runpod-volume/installed_packages.txt"
+    pip list --format=freeze > /installed_packages.txt
+    echo "[INFO] Package list exported to /installed_packages.txt"
 
     echo "[INFO] Installing installed_packages.txt"
     # Activate the virtual environment
     source "$VENV_PATH/bin/activate"
-    pip install -r /runpod-volume/installed_packages.txt
+    pip install -r /installed_packages.txt
     # closing the virtual environment
     deactivate
     
