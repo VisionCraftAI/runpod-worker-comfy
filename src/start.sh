@@ -5,9 +5,8 @@ set -e
 # Define paths
 VENV_PATH="/runpod-volume/venv"
 COMFYUI_PATH="/runpod-volume/comfyui"
-SCRIPTS_DIR="/scripts"
-RP_HANDLER_SCRIPT="${SCRIPTS_DIR}/rp_handler.py"
-INSTALL_SCRIPT="${SCRIPTS_DIR}/install_comfyui.sh"
+RP_HANDLER_SCRIPT="/rp_handler.py"
+INSTALL_SCRIPT="/install_comfyui.sh"
 
 # Use libtcmalloc for better memory management
 TCMALLOC="$(ldconfig -p | grep -Po "libtcmalloc.so.\d" | head -n 1)"
