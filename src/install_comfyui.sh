@@ -5,8 +5,6 @@ set -e
 # Define paths
 VENV_PATH="/runpod-volume/venv"
 COMFYUI_PATH="/runpod-volume/comfyui"
-START_SCRIPT="/start.sh"
-RP_HANDLER_SCRIPT="/rp_handler.py"
 RUNPOD_REQUIREMENTS_FILE="/runpod-volume/requirements.txt"
 REQUIREMENTS_FILE="/requirements.txt"
 
