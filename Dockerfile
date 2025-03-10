@@ -35,4 +35,4 @@ COPY requirements.txt requirements.txt
 RUN chmod +x /install_comfyui.sh /start.sh /rp_handler.py requirements.txt
 
 # Set entrypoint to installation script
-ENTRYPOINT ["/scripts/start.sh"]
+ENTRYPOINT ["/start.sh"]
