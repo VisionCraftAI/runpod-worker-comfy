@@ -135,7 +135,7 @@ def apply_frame(image_path, output_path, frame_widths, frame_color='black', text
                 font = ImageFont.truetype(font_path, side_font_size)
             else:
                 font = ImageFont.load_default(side_font_size)
-            
+
             text_color = text_colors.get(side, 'white')  # Default color is white if not specified
             _, _, text_width, text_height = draw.textbbox((0, 0), text=text, font=font)
 
@@ -163,15 +163,32 @@ def apply_frame(image_path, output_path, frame_widths, frame_color='black', text
 # adventurer_img = "C:\\Users\\alond\\Downloads\\filters-images\\filters\\adventurer\\default.jpg"
 # output_img = "C:\\Users\\alond\\Downloads\\filters-images\\filters\\adventurer\\default_with_border.jpg"
 
-# apply_frame(image_path=adventurer_img, 
-#             output_path=output_img, 
-#             frame_widths={'top': 30, 'bottom': 60, 'left': 30, 'right': 30}, 
-#             frame_color='white', 
-#             texts={'top': "", 
+# apply_frame(image_path=adventurer_img,
+#             output_path=output_img,
+#             frame_widths={'top': 30, 'bottom': 60, 'left': 30, 'right': 30},
+#             frame_color='white',
+#             texts={'top': "",
 #                    'bottom': "Mitzi & Pizi wedding 2024",
 #                    'right': "Elad Phothoboot 2024"
-#                    }, 
+#                    },
 #             text_colors={'top': 'black', 'bottom': 'black', 'left': 'grey', 'right': 'black'},
-#             font_path=None, 
+#             font_path=None,
 #             font_sizes={'top': 30, 'bottom': 30, 'left': 25, 'right': 14},
 #             )
+
+
+# remove metadata from image
+def remove_metadata(image_path):
+    """
+    Remove metadata from an image and overide it.
+
+    Parameters:
+    image_path (str): Path to the input image.
+    """
+    with Image.open(image_path) as img:
+        # Create a new image with the same size and mode
+        new_img = Image.new(img.mode, img.size)
+        new_img.putdata(list(img.getdata()))
+
+        # Save the new image, which should strip away the metadata
+        new_img.save(image_path)
